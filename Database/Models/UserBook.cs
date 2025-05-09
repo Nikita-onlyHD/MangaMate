@@ -2,9 +2,13 @@
 {
     class UserBook
     {
-        public User User { get; set; } = null!;
+        public int UserId { get; set; }
 
-        public Book Book { get; set; } = null!;
+        public User UserFK { get; set; } = null!;
+
+        public int BookId { get; set; }
+
+        public Book BookFK { get; set; } = null!;
 
         public int StateId { get; set; }
 

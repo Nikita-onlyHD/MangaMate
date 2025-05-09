@@ -11,5 +11,7 @@
         public string Password { get; set; } = null!;
 
         public ICollection<Book>? Books { get; set; }
+
+        public ICollection<UserBook>? UserBooks { get; set; }
     }
 }
