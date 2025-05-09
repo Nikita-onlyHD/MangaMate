@@ -20,7 +20,6 @@ namespace MangaMate
             var dbOptions = new DbContextOptionsBuilder().UseNpgsql(connectionString).Options;
 
             using var context = new Context(dbOptions);
-            throw new Exception("aboba");
         }
     }
 
