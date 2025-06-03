@@ -14,6 +14,8 @@ class Book
 
     public string Release {  get; set; } = null!;
 
+    public ICollection<BookPage> BookPages { get; set; } = null!;
+
     [ForeignKey("BookType")]
     public int BookTypeId { get; set; } 
 

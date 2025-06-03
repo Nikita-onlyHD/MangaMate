@@ -2,6 +2,7 @@
 using System.Data;
 using System.Windows;
 using MangaMate.Database;
+using MangaMate.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -14,12 +15,19 @@ namespace MangaMate
     {
         private void ApplicationStartup(object sender, StartupEventArgs e)
         {
-            var config = new Microsoft.Extensions.Configuration.ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            var connectionString = config.GetConnectionString("pgsql");
+            using var context = new ContextFactory().CreateDbContext(Array.Empty<string>());
 
-            var dbOptions = new DbContextOptionsBuilder().UseNpgsql(connectionString).Options;
-
-            using var context = new Context(dbOptions);
+            var authenticationView = new AuthenticationView();
+            authenticationView.Show();
+            authenticationView.IsVisibleChanged += (s, ev) =>
+            {
+                if (authenticationView.IsVisible == false && authenticationView.IsLoaded)
+                {
+                    var mainView = new MainView();
+                    mainView.Show();
+                    authenticationView.Close();
+                }
+            };
         }
     }
 

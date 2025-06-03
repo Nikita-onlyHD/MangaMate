@@ -17,5 +17,7 @@
         public int Assessment {  get; set; }
 
         public bool Favourite { get; set; }
+
+        public int CurrentChapter { get; set; }
     }
 }

@@ -3,12 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MangaMate.Database;
 
-class Context : DbContext
+class Context(DbContextOptions options) : DbContext(options)
 {
-    public Context(DbContextOptions options) : base(options) 
-    {
-        Database.EnsureCreated();
-    }
+    public DbSet<User> Users { get; set; }
+    public DbSet<BookType> BookTypes { get; set; }
+    public DbSet<BookState> BookStates { get; set; }
+    public DbSet<Genre> Genres { get; set; }
+    public DbSet<Book> Books { get; set; }
+    public DbSet<UserBook> UsersBooks { get; set; }
+    public DbSet<UserState> UsersStates { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -35,6 +38,14 @@ class Context : DbContext
         builder.Entity<Book>().ToTable("books");
         builder.Entity<Book>().HasKey(e => e.Id);
         builder.Entity<Book>().HasIndex(e => e.Title).IsUnique();
+
+        builder.Entity<BookPage>().ToTable("book_pages");
+        builder.Entity<BookPage>().HasKey(e => e.Id);
+
+        builder.Entity<BookPage>()
+            .HasOne(bp => bp.Book)
+            .WithMany(b => b.BookPages)
+            .HasForeignKey(bp => bp.BookId);
 
         builder.Entity<UserState>()
             .HasMany(e => e.UserBooks)
@@ -82,11 +93,11 @@ class Context : DbContext
                 userBook => userBook
                     .HasOne(userBook => userBook.BookFK)
                     .WithMany(book => book.UserBooks)
-                    .HasForeignKey(bookGenre => bookGenre.BookId),
+                    .HasForeignKey(userBook => userBook.BookId),
                 userBook => userBook
                     .HasOne(userBook => userBook.UserFK)
-                    .WithMany(genre => genre.UserBooks)
-                    .HasForeignKey(bookGenre => bookGenre.UserId),
+                    .WithMany(user => user.UserBooks)
+                    .HasForeignKey(userBook => userBook.UserId),
                 bookGenre =>
                 {
                     bookGenre.ToTable("users_books");
