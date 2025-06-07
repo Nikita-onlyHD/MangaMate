@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="MangaMate.Views.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MangaMate.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Statistics Header -->
+        <Button Grid.Column="0" Grid.Row="0" Content="Статистика" 
+            Style="{StaticResource MenuButtonStyle}" HorizontalAlignment="Left" Margin="0,0,0,20"/>
+
+        <!-- Show All Button -->
+        <Button Grid.Column="1" Grid.Row="0" Content="Показать все" 
+            Style="{StaticResource MenuButtonStyle}" HorizontalAlignment="Right" Margin="0,0,0,20"/>
+
+        <!-- Statistics Grid -->
+        <Grid Grid.Column="0" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Currently Reading -->
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Читаю" Style="{StaticResource StatisticsTextStyle}"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="2" Style="{StaticResource StatisticsNumberStyle}"/>
+
+            <!-- Plan to Read -->
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="В планах" Style="{StaticResource StatisticsTextStyle}"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="25" Style="{StaticResource StatisticsNumberStyle}"/>
+
+            <!-- Completed -->
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Прочитано" Style="{StaticResource StatisticsTextStyle}"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="106" Style="{StaticResource StatisticsNumberStyle}"/>
+
+            <!-- On Hold -->
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Отложено" Style="{StaticResource StatisticsTextStyle}"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="7" Style="{StaticResource StatisticsNumberStyle}"/>
+        </Grid>
+
+        <!-- Chart Placeholder -->
+        <Grid Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center">
+            <Ellipse Width="150" Height="150" Stroke="#A03030" StrokeThickness="3" Fill="#270000"/>
+            <Ellipse Width="100" Height="100" Fill="#270000"/>
+        </Grid>
+    </Grid>
+</UserControl>

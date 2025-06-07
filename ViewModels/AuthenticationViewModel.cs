@@ -196,13 +196,14 @@ internal class AuthenticationViewModel : ViewModelBase
     private async Task AuthenticateAsync(CancellationToken token)
     {
 
-        var user = await UserRepo.GetUser(Login, Password, token);
-        if (user != null)
+        var user = await UserRepo.GetUser(Login, token);
+        if (user != null && user.Password == Password)
         {
             IsViewVisible = false;
             UserContext.Id = user.Id;
             UserContext.Email = user.Email;
             UserContext.Login = user.Login;
+            UserContext.Avatar = user.Avatar;
             ClearInputs();
         }
         else

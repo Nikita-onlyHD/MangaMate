@@ -3,10 +3,119 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:MangaMate.Views"
+        xmlns:viewModel="clr-namespace:MangaMate.ViewModels"
         xmlns:local="clr-namespace:MangaMate"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow"
+        Width="1350"
+        Height="750"
+        WindowStartupLocation="CenterScreen"
+        Background="#2D0909">
+    <Window.DataContext>
+        <viewModel:MainViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
+            <views:HomeView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:ProfileEditViewModel}">
+            <views:ProfileEditView/>
+        </DataTemplate>
+    </Window.Resources>
+
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Left Side - User Profile -->
+        <Grid Grid.Column="0" Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Profile Picture -->
+            <Border Grid.Row="0"
+                    BorderBrush="#A03030"
+                    BorderThickness="2"
+                    CornerRadius="20"
+                    HorizontalAlignment="Center"
+                    Margin="0,30,0,10"
+                    Width="160"
+                    Height="160">
+                <Image 
+                    Width="150"
+                    Height="150"
+                    HorizontalAlignment="Center"
+                    Source="{Binding AvatarImage}"
+                    Stretch="UniformToFill"/>
+            </Border>
+            
+            
+            <!-- Username -->
+            <TextBlock Grid.Row="1" Text="{Binding Login}" Foreground="Black" 
+                       FontSize="24" HorizontalAlignment="Center" Margin="0,10,0,20"/>
+
+            <!-- Edit Profile Button -->
+            <Border Grid.Row="2" BorderBrush="#A03030" BorderThickness="2" 
+                    CornerRadius="20" HorizontalAlignment="Center" Margin="0,10,0,0">
+                <Button Command="{Binding ShowProfileEditViewCommand}" Content="Редактирование" Style="{StaticResource MenuButtonStyle}" 
+                        Width="200" Height="40" Padding="10"/>
+            </Border>
+
+            <!-- Power/Logout Button -->
+            <Button Grid.Row="4" Style="{StaticResource MenuButtonStyle}" 
+                    HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,10">
+                <TextBlock Text="⏻" FontSize="28"/>
+            </Button>
+        </Grid>
+
+        <!-- Right Side - Content -->
+        <Grid Grid.Column="1" Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Top Navigation -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Manga Catalog Button -->
+                <Button Grid.Column="0" Content="Каталог Манги" Style="{StaticResource MenuButtonStyle}" 
+                        HorizontalAlignment="Center" Margin="0,20,0,10"/>
+
+                <!-- Center Logo Placeholder -->
+                <TextBlock Grid.Column="1" Text="M" FontSize="32" Foreground="#A03030" 
+                           HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20,0"/>
+
+                <!-- Ranobe Catalog Button -->
+                <Button Grid.Column="2" Content="Каталог Ранобэ" Style="{StaticResource MenuButtonStyle}" 
+                        HorizontalAlignment="Center" Margin="0,20,0,10"/>
+            </Grid>
+
+            <!-- Main Content Area - Statistics -->
+            <ContentControl Content="{Binding CurrentChildView}"
+                Grid.Row="1"
+                Margin="25"/>
+
+                <!-- Settings Button -->
+            <Button Grid.Row="2" Style="{StaticResource MenuButtonStyle}" 
+                    HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,10">
+                <TextBlock Text="⚙" FontSize="28"/>
+            </Button>
+        </Grid>
     </Grid>
 </Window>
