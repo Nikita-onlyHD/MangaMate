@@ -1,6 +1,6 @@
 ﻿namespace MangaMate.Database.Models
 {
-    class UserBook
+    public class UserBook
     {
         public int UserId { get; set; }
 

@@ -34,6 +34,15 @@ class Context(DbContextOptions options) : DbContext(options)
         builder.Entity<User>().ToTable("users");
         builder.Entity<User>().HasKey(e => e.Id);
         builder.Entity<User>().HasIndex(e => e.Login).IsUnique();
+        builder.Entity<User>().Property(e => e.Role).HasConversion<string>();
+        builder.Entity<User>().HasData(new User()
+        {
+            Id = 1,
+            Login = "admin",
+            Password = "admin",
+            Email = "admin",
+            Role = UserRole.Admin,
+        });
 
         builder.Entity<Book>().ToTable("books");
         builder.Entity<Book>().HasKey(e => e.Id);

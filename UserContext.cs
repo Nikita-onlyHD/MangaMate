@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using MangaMate.Database.Models;
 
 namespace MangaMate
 {
@@ -55,6 +56,20 @@ namespace MangaMate
                 {
                     _avatar = value;
                     OnPropertyChanged(nameof(Avatar));
+                }
+            }
+        }
+
+        private static UserRole _role;
+        public static UserRole Role
+        {
+            get => _role;
+            set
+            {
+                if (_role != value)
+                {
+                    _role = value;
+                    OnPropertyChanged(nameof(Role));
                 }
             }
         }

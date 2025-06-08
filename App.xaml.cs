@@ -2,6 +2,7 @@
 using System.Data;
 using System.Windows;
 using MangaMate.Database;
+using MangaMate.ViewModels;
 using MangaMate.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,16 +19,21 @@ namespace MangaMate
             using var context = new ContextFactory().CreateDbContext(Array.Empty<string>());
 
             var authenticationView = new AuthenticationView();
+            authenticationView.DataContext = new AuthenticationViewModel();
             authenticationView.Show();
-            authenticationView.IsVisibleChanged += (s, ev) =>
+
+            if (authenticationView.DataContext is AuthenticationViewModel authContext)
             {
-                if (authenticationView.IsVisible == false && authenticationView.IsLoaded)
+                authContext.Authenticated += (s, e) =>
                 {
-                    var mainView = new MainView();
-                    mainView.Show();
-                    authenticationView.Close();
-                }
-            };
+                    if (authenticationView.IsVisible == false && authenticationView.IsLoaded)
+                    {
+                        var mainView = new MainView();
+                        mainView.Show();
+                        authenticationView.Close();
+                    }
+                };
+            }
         }
     }
 

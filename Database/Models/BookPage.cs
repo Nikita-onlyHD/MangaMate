@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MangaMate.Database.Models
 {
-    class BookPage
+    public class BookPage
     {
         public int Id { get; set; }
 

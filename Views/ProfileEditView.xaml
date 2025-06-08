@@ -31,9 +31,9 @@
             <GroupBox Header="Смена никнейма" Margin="0,0,0,20">
                 <StackPanel Margin="10">
                     <TextBlock Text="Новый никнейм" Margin="0,0,0,5"/>
-                    <TextBox Text="{Binding NewNickname}" Margin="0,0,0,10"/>
+                    <TextBox Text="{Binding NewLogin}" Margin="0,0,0,10"/>
 
-                    <Button Command="{Binding SaveNicknameCommand}" Content="Сохранить" HorizontalAlignment="Left" Padding="20,5"/>
+                    <Button Command="{Binding SaveLoginCommand}" Content="Сохранить" HorizontalAlignment="Left" Padding="20,5"/>
                 </StackPanel>
             </GroupBox>
 

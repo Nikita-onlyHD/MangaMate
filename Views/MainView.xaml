@@ -23,6 +23,9 @@
         <DataTemplate DataType="{x:Type viewModel:ProfileEditViewModel}">
             <views:ProfileEditView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:BookEditViewModel}">
+            <views:BookEditView/>
+        </DataTemplate>
     </Window.Resources>
 
     <Grid>
@@ -34,6 +37,7 @@
         <!-- Left Side - User Profile -->
         <Grid Grid.Column="0" Margin="20">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -70,8 +74,14 @@
                         Width="200" Height="40" Padding="10"/>
             </Border>
 
+            <Border Grid.Row="3" BorderBrush="#A03030" BorderThickness="2" 
+                CornerRadius="20" HorizontalAlignment="Center" Margin="0,10,0,0">
+                <Button Command="{Binding ShowProfileEditViewCommand}" Content="Добавить контент" Style="{StaticResource MenuButtonStyle}" 
+                    Width="200" Height="40" Padding="10"/>
+            </Border>
+
             <!-- Power/Logout Button -->
-            <Button Grid.Row="4" Style="{StaticResource MenuButtonStyle}" 
+            <Button Grid.Row="5" Style="{StaticResource MenuButtonStyle}" 
                     HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,10">
                 <TextBlock Text="⏻" FontSize="28"/>
             </Button>

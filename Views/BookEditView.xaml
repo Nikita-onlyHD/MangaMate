@@ -1,0 +1,169 @@
+﻿<UserControl x:Class="MangaMate.Views.BookEditView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MangaMate.Views"
+             xmlns:viewModel="clr-namespace:MangaMate.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <viewModel:BookEditViewModel/>
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="MinWidth" Value="100"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,5,0,2"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Список книг -->
+        <Border Grid.Column="0" BorderBrush="LightGray" BorderThickness="0,0,1,0" Padding="10">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="Список книг" 
+                          FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                <Button DockPanel.Dock="Bottom" Content="Создать новую книгу" 
+                       Command="{Binding NewBookCommand}" Margin="0,10,0,0"/>
+
+                <ListBox ItemsSource="{Binding Books}" 
+                        SelectedItem="{Binding SelectedBook}"
+                        DisplayMemberPath="Title"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+            </DockPanel>
+        </Border>
+
+        <!-- Форма редактирования -->
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+            <Border Padding="20">
+                <StackPanel>
+                    <!-- Заголовок формы -->
+                    <TextBlock Text="{Binding FormTitle}" 
+                              FontSize="18" FontWeight="Bold" 
+                              Margin="0,0,0,20"/>
+
+                    <!-- Основные поля -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <Label Content="Название:" Target="{Binding ElementName=TitleTextBox}"/>
+                            <TextBox x:Name="TitleTextBox" 
+                                    Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
+                                    IsEnabled="{Binding IsFormEnabled}"/>
+
+                            <Label Content="Автор:" Target="{Binding ElementName=AuthorTextBox}"/>
+                            <TextBox x:Name="AuthorTextBox" 
+                                    Text="{Binding Author, UpdateSourceTrigger=PropertyChanged}"
+                                    IsEnabled="{Binding IsFormEnabled}"/>
+
+                            <Label Content="Дата релиза:" Target="{Binding ElementName=ReleaseDateTextBox}"/>
+                            <TextBox x:Name="ReleaseDateTextBox" 
+                                    Text="{Binding Release, UpdateSourceTrigger=PropertyChanged}"
+                                    IsEnabled="{Binding IsFormEnabled}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <Label Content="Тип книги:" Target="{Binding ElementName=BookTypeComboBox}"/>
+                            <ComboBox x:Name="BookTypeComboBox"
+                                     ItemsSource="{Binding BookTypes}"
+                                     SelectedItem="{Binding SelectedBookType}"
+                                     DisplayMemberPath="Name"
+                                     IsEnabled="{Binding IsFormEnabled}"/>
+
+                            <Label Content="Состояние:" Target="{Binding ElementName=BookStateComboBox}"/>
+                            <ComboBox x:Name="BookStateComboBox"
+                                     ItemsSource="{Binding BookStates}"
+                                     SelectedItem="{Binding SelectedBookState}"
+                                     DisplayMemberPath="Name"
+                                     IsEnabled="{Binding IsFormEnabled}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Описание -->
+                    <Label Content="Описание:" Target="{Binding ElementName=DescriptionTextBox}"/>
+                    <TextBox x:Name="DescriptionTextBox" 
+                            Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                            TextWrapping="Wrap"
+                            AcceptsReturn="True"
+                            Height="100"
+                            VerticalScrollBarVisibility="Auto"
+                            IsEnabled="{Binding IsFormEnabled}"/>
+
+                    <!-- Жанры -->
+                    <Label Content="Жанры:" Margin="0,20,0,5"/>
+                    <Border BorderBrush="LightGray" BorderThickness="1" 
+                           Padding="10" MaxHeight="200">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding GenreSelections}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Content="{Binding Genre.Name}"
+                                                 IsChecked="{Binding IsSelected}"
+                                                 IsEnabled="{Binding DataContext.IsFormEnabled, 
+                                                           RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                 Margin="0,2"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Border>
+
+                    <!-- Кнопки управления -->
+                    <StackPanel Orientation="Horizontal" 
+                               HorizontalAlignment="Right" 
+                               Margin="0,20,0,0">
+
+                        <Button Content="Редактировать" 
+                               Command="{Binding EditBookCommand}"
+                               Visibility="{Binding IsBookSelected, 
+                                          Converter={x:Static BooleanToVisibilityConverter.Instance}}"/>
+
+                        <Button Content="Сохранить" 
+                               Command="{Binding SaveBookCommand}"
+                               Visibility="{Binding IsFormEnabled, 
+                                          Converter={x:Static BooleanToVisibilityConverter.Instance}}"/>
+
+                        <Button Content="Отмена" 
+                               Command="{Binding CancelEditCommand}"
+                               Visibility="{Binding IsEditMode, 
+                                          Converter={x:Static BooleanToVisibilityConverter.Instance}}"/>
+
+                        <Button Content="Удалить" 
+                               Command="{Binding DeleteBookCommand}"
+                               Background="IndianRed"
+                               Foreground="White"
+                               Visibility="{Binding IsBookSelected, 
+                                          Converter={x:Static BooleanToVisibilityConverter.Instance}}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

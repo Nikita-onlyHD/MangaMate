@@ -1,6 +1,12 @@
 ﻿namespace MangaMate.Database.Models
 {
-    sealed class User
+    public enum UserRole
+    {
+        User,
+        Admin
+    }
+
+    public sealed class User
     {
         public int Id { get; set; }
 
@@ -11,6 +17,8 @@
         public string Password { get; set; } = null!;
 
         public byte[]? Avatar { get; set; }
+
+        public UserRole Role { get; set; }
 
         public ICollection<Book>? Books { get; set; }
 

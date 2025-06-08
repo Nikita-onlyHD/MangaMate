@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
@@ -38,25 +39,27 @@ namespace MangaMate.ViewModels
             }
         }
 
+        private string _login = UserContext.Login;
         public string Login
         {
-            get => UserContext.Login;
+            get => _login;
             set
             {
-                if (UserContext.Login != value)
+                if (_login != value)
                 {
-                    UserContext.Login = value;
+                    _login = value;
                     OnPropertyChanged(nameof(Login));
                 }
             }
         }
 
+        private byte[]? _avatar = UserContext.Avatar;
         public byte[]? Avatar
         {
-            get => UserContext.Avatar;
+            get => _avatar;
             set
             {
-                UserContext.Avatar = value;
+                _avatar = value;
                 OnPropertyChanged(nameof(Avatar));
                 OnPropertyChanged(nameof(AvatarImage));
             }
@@ -89,6 +92,7 @@ namespace MangaMate.ViewModels
         #region Command
         public ICommand ShowHomeViewCommand { get; }
         public ICommand ShowProfileEditViewCommand { get; }
+        public ICommand ShowBookEditViewCommand { get; }
 
         #endregion
 
@@ -97,10 +101,26 @@ namespace MangaMate.ViewModels
             //Initialize commands
             ShowHomeViewCommand = new Command(ExecuteShowHomeViewCommand, (_) => true);
             ShowProfileEditViewCommand = new Command(ExecuteShowProfileEditViewCommand, (_) => true);
+            ShowBookEditViewCommand = new Command(ExecuteShowBookEditViewCommand, (_) => true);
 
             //Default view
             ExecuteShowHomeViewCommand(null);
+            UserContext.PropertyChanged += UpdateProperties;
+        }
 
+        private void UpdateProperties(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(UserContext.Login):
+                    Login = UserContext.Login;
+                    break;
+                case nameof(UserContext.Avatar):
+                    Avatar = UserContext.Avatar;
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void ExecuteShowHomeViewCommand(object? obj)
@@ -113,6 +133,12 @@ namespace MangaMate.ViewModels
         {
             CurrentChildView = new ProfileEditViewModel();
             Caption = "Profile Edit";
+        }
+
+        private void ExecuteShowBookEditViewCommand(object? obj)
+        {
+            CurrentChildView = new ProfileEditViewModel();
+            Caption = "Book Edit";
         }
     }
 }

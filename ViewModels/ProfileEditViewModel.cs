@@ -119,6 +119,7 @@ namespace MangaMate.ViewModels
             }
 
             await UserRepo.UpdateUserAsync(UserContext.Login, token, newLogin: NewLogin);
+            UserContext.Login = NewLogin;
             MessageBox.Show("Никнейм успешно изменен", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
 
             NewLogin = string.Empty;

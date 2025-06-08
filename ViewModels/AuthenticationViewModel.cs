@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using MangaMate.Database.Models;
 using MangaMate.Database.Repositories;
@@ -204,14 +206,17 @@ internal class AuthenticationViewModel : ViewModelBase
             UserContext.Email = user.Email;
             UserContext.Login = user.Login;
             UserContext.Avatar = user.Avatar;
+            UserContext.Role = user.Role;
             ClearInputs();
+            Authenticated?.Invoke(this, new AuthenticationEventArgs(true));
         }
         else
         {
             ErrorMessage = "Неверный логин или пароль";
         }
-        
     }
+
+    public event EventHandler<AuthenticationEventArgs> Authenticated;
 
     private void ClearInputs()
     {

@@ -2,7 +2,7 @@
 
 namespace MangaMate.Database.Models;
 
-class Book
+public class Book
 {
     public int Id { get; set; }
 

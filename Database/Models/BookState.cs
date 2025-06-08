@@ -1,6 +1,6 @@
 ﻿namespace MangaMate.Database.Models
 {
-    sealed class BookState
+    public sealed class BookState
     {
         public int Id { get; set; }
 
