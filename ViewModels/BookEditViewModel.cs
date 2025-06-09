@@ -10,6 +10,11 @@ using MangaMate.Database.Models;
 using MangaMate.Repository;
 using System.Windows.Input;
 using MangaMate.Database;
+using System.IO;
+using System.Windows.Media.Imaging;
+using MangaMate.Database.Repositories;
+using Microsoft.Win32;
+using System.Windows;
 
 namespace MangaMate.ViewModels
 {
@@ -41,6 +46,7 @@ namespace MangaMate.ViewModels
         public ICommand EditBookCommand { get; }
         public ICommand CancelEditCommand { get; }
         public ICommand DeleteBookCommand { get; }
+        public ICommand SelectImageCommand { get; }
 
         public BookEditViewModel()
         {
@@ -49,6 +55,7 @@ namespace MangaMate.ViewModels
             EditBookCommand = new Command( _ => EnableEditMode(), (_) => SelectedBook != null && !IsEditMode);
             CancelEditCommand = new Command( _ => CancelEdit(), (_) => IsEditMode);
             DeleteBookCommand = new Command(async _ => await DeleteBookAsync(_cts.Token), _ => SelectedBook != null && !IsEditMode);
+            SelectImageCommand = new Command(async _ => await SelectAsyncImage(_cts.Token), (_) => true);
 
             LoadDataAsync(_cts.Token);
         }
@@ -90,6 +97,40 @@ namespace MangaMate.ViewModels
         {
             get => _release;
             set => SetProperty(ref _release, value);
+        }
+
+        private byte[]? _avatar;
+        public byte[]? Avatar
+        {
+            get => _avatar;
+            set
+            {
+                _avatar = value;
+                OnPropertyChanged(nameof(Avatar));
+                OnPropertyChanged(nameof(AvatarImage));
+            }
+        }
+
+        public BitmapImage AvatarImage
+        {
+            get
+            {
+                if (Avatar == null || Avatar.Length == 0)
+                    return null;
+
+                var image = new BitmapImage();
+                using (var mem = new MemoryStream(Avatar))
+                {
+                    mem.Position = 0;
+                    image.BeginInit();
+                    image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+                    image.CacheOption = BitmapCacheOption.OnLoad;
+                    image.StreamSource = mem;
+                    image.EndInit();
+                }
+                image.Freeze();
+                return image;
+            }
         }
 
         public BookType? SelectedBookType
@@ -211,6 +252,7 @@ namespace MangaMate.ViewModels
             Description = string.Empty;
             Author = string.Empty;
             Release = string.Empty;
+            Avatar = null;
             SelectedBookType = null;
             SelectedBookState = null;
 
@@ -237,6 +279,28 @@ namespace MangaMate.ViewModels
             IsEditMode = false;
         }
 
+        private async Task SelectAsyncImage(CancellationToken token)
+        {
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png|All files (*.*)|*.*",
+                Title = "Выберите изображение для аватара"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    Avatar = File.ReadAllBytes(openFileDialog.FileName);
+                    //await UserRepo.UpdateUserAsync(UserContext.Login, token, newAvatar: Avatar);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка при загрузке изображения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
         private async Task SaveBookAsync(CancellationToken token)
         {
             try
@@ -258,6 +322,7 @@ namespace MangaMate.ViewModels
                 book.Release = Release;
                 book.BookTypeId = SelectedBookType?.Id ?? 0;
                 book.BookStateId = SelectedBookState?.Id ?? 0;
+                book.Avatar = Avatar;
 
                 var savedBook = await BookRepository.SaveBookAsync(book, token);
 

@@ -31,6 +31,7 @@
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Margin" Value="0,5,0,2"/>
         </Style>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
 
     <Grid>
@@ -116,6 +117,13 @@
                             VerticalScrollBarVisibility="Auto"
                             IsEnabled="{Binding IsFormEnabled}"/>
 
+                    <GroupBox Header="Смена аватара">
+                        <StackPanel Margin="10">
+                            <Button Command="{Binding SelectImageCommand}" Content="Выбрать фотографию" Margin="0,0,0,10" HorizontalAlignment="Left" Padding="20,5"/>
+                            <Image Source="{Binding AvatarImage}" Width="100" Height="100" Stretch="UniformToFill"/>
+                        </StackPanel>
+                    </GroupBox>
+
                     <!-- Жанры -->
                     <Label Content="Жанры:" Margin="0,20,0,5"/>
                     <Border BorderBrush="LightGray" BorderThickness="1" 
@@ -143,24 +151,24 @@
                         <Button Content="Редактировать" 
                                Command="{Binding EditBookCommand}"
                                Visibility="{Binding IsBookSelected, 
-                                          Converter={x:Static BooleanToVisibilityConverter.Instance}}"/>
+                                          Converter={StaticResource BoolToVis}}"/>
 
                         <Button Content="Сохранить" 
                                Command="{Binding SaveBookCommand}"
                                Visibility="{Binding IsFormEnabled, 
-                                          Converter={x:Static BooleanToVisibilityConverter.Instance}}"/>
+                                          Converter={StaticResource BoolToVis}}"/>
 
                         <Button Content="Отмена" 
                                Command="{Binding CancelEditCommand}"
                                Visibility="{Binding IsEditMode, 
-                                          Converter={x:Static BooleanToVisibilityConverter.Instance}}"/>
+                                          Converter={StaticResource BoolToVis}}"/>
 
                         <Button Content="Удалить" 
                                Command="{Binding DeleteBookCommand}"
                                Background="IndianRed"
                                Foreground="White"
                                Visibility="{Binding IsBookSelected, 
-                                          Converter={x:Static BooleanToVisibilityConverter.Instance}}"/>
+                                          Converter={StaticResource BoolToVis}}"/>
                     </StackPanel>
                 </StackPanel>
             </Border>

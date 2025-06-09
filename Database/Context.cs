@@ -18,10 +18,45 @@ class Context(DbContextOptions options) : DbContext(options)
         builder.Entity<BookType>().ToTable("book_types");
         builder.Entity<BookType>().HasKey(e => e.Id);
         builder.Entity<BookType>().HasIndex(e => e.Name).IsUnique();
+        builder.Entity<BookType>().HasData(new BookType()
+        {
+            Id = 1,
+            Name = "Манга"
+        });
+        builder.Entity<BookType>().HasData(new BookType()
+        {
+            Id = 2,
+            Name = "Книга"
+        });
 
         builder.Entity<BookState>().ToTable("book_states");
         builder.Entity<BookState>().HasKey(e => e.Id);
         builder.Entity<BookState>().HasIndex(e => e.Name).IsUnique();
+        builder.Entity<BookState>().HasData(new BookState()
+        {
+            Id = 1,
+            Name = "Онгоинг"
+        });
+        builder.Entity<BookState>().HasData(new BookState()
+        {
+            Id = 2,
+            Name = "Анонс"
+        });
+        builder.Entity<BookState>().HasData(new BookState()
+        {
+            Id = 3,
+            Name = "Выпуск прекращен"
+        });
+        builder.Entity<BookState>().HasData(new BookState()
+        {
+            Id = 4,
+            Name = "Завершён"
+        });
+        builder.Entity<BookState>().HasData(new BookState()
+        {
+            Id = 5,
+            Name = "Приостоновлен"
+        });
 
         builder.Entity<UserState>().ToTable("user_states");
         builder.Entity<UserState>().HasKey(e => e.Id);
@@ -30,6 +65,86 @@ class Context(DbContextOptions options) : DbContext(options)
         builder.Entity<Genre>().ToTable("genres");
         builder.Entity<Genre>().HasKey(e => e.Id);
         builder.Entity<Genre>().HasIndex(e => e.Name).IsUnique();
+        builder.Entity<Genre>().HasData(new Genre()
+        {
+            Id = 1,
+            Name = "Боевик"
+        });
+        builder.Entity<Genre>().HasData(new Genre()
+        {
+            Id = 2,
+            Name = "Сёнэн"
+        });
+        builder.Entity<Genre>().HasData(new Genre()
+        {
+            Id = 3,
+            Name = "Экшен"
+        });
+        builder.Entity<Genre>().HasData(new Genre()
+        {
+            Id = 4,
+            Name = "Приключения"
+        });
+        builder.Entity<Genre>().HasData(new Genre()
+        {
+            Id = 5,
+            Name = "Фэнтези"
+        });
+        builder.Entity<Genre>().HasData(new Genre()
+        {
+            Id = 6,
+            Name = "Фантастика"
+        });
+        builder.Entity<Genre>().HasData(new Genre()
+        {
+            Id = 7,
+            Name = "Романтика"
+        });
+        builder.Entity<Genre>().HasData(new Genre()
+        {
+            Id = 8,
+            Name = "Комедия"
+        });
+        builder.Entity<Genre>().HasData(new Genre()
+        {
+            Id = 9,
+            Name = "Драма"
+        });
+        builder.Entity<Genre>().HasData(new Genre()
+        {
+            Id = 10,
+            Name = "Повседневность"
+        });
+        builder.Entity<Genre>().HasData(new Genre()
+        {
+            Id = 11,
+            Name = "Мистика"
+        });
+        builder.Entity<Genre>().HasData(new Genre()
+        {
+            Id = 12,
+            Name = "Триллер"
+        });
+        builder.Entity<Genre>().HasData(new Genre()
+        {
+            Id = 13,
+            Name = "Детектив"
+        });
+        builder.Entity<Genre>().HasData(new Genre()
+        {
+            Id = 14,
+            Name = "Исекай"
+        });
+        builder.Entity<Genre>().HasData(new Genre()
+        {
+            Id = 15,
+            Name = "Психология"
+        });
+        builder.Entity<Genre>().HasData(new Genre()
+        {
+            Id = 16,
+            Name = "Ужасы"
+        });
 
         builder.Entity<User>().ToTable("users");
         builder.Entity<User>().HasKey(e => e.Id);

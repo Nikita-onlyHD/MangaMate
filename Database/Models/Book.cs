@@ -14,6 +14,8 @@ public class Book
 
     public string Release {  get; set; } = null!;
 
+    public byte[]? Avatar { get; set; }
+
     public ICollection<BookPage> BookPages { get; set; } = null!;
 
     [ForeignKey("BookType")]

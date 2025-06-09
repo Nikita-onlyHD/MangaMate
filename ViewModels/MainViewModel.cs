@@ -93,6 +93,7 @@ namespace MangaMate.ViewModels
         public ICommand ShowHomeViewCommand { get; }
         public ICommand ShowProfileEditViewCommand { get; }
         public ICommand ShowBookEditViewCommand { get; }
+        public ICommand ShowCatalogMangasViewCommand { get; }
 
         #endregion
 
@@ -102,6 +103,7 @@ namespace MangaMate.ViewModels
             ShowHomeViewCommand = new Command(ExecuteShowHomeViewCommand, (_) => true);
             ShowProfileEditViewCommand = new Command(ExecuteShowProfileEditViewCommand, (_) => true);
             ShowBookEditViewCommand = new Command(ExecuteShowBookEditViewCommand, (_) => true);
+            ShowCatalogMangasViewCommand = new Command(ExecuteShowCatalogMangasViewCommand, (_) => true);
 
             //Default view
             ExecuteShowHomeViewCommand(null);
@@ -137,7 +139,13 @@ namespace MangaMate.ViewModels
 
         private void ExecuteShowBookEditViewCommand(object? obj)
         {
-            CurrentChildView = new ProfileEditViewModel();
+            CurrentChildView = new BookEditViewModel();
+            Caption = "Book Edit";
+        }
+
+        private void ExecuteShowCatalogMangasViewCommand(object? obj)
+        {
+            CurrentChildView = new CatalogMangasViewModel();
             Caption = "Book Edit";
         }
     }

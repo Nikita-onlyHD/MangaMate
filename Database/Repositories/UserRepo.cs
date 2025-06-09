@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-using MangaMate.Database.Models;
+﻿using MangaMate.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace MangaMate.Database.Repositories
