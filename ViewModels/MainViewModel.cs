@@ -111,20 +111,6 @@ namespace MangaMate.ViewModels
             UserContext.PropertyChanged += UpdateProperties;
 
             Mediator.Instance.Register("OpenCatalogManga", _ => CurrentChildView = new CatalogMangasViewModel());
-            //Mediator.Instance.Register("OpenMangaDetail", o => CurrentChildView = new MangaDetailViewModel((Book)o!));
-            //Mediator.Instance.Register("OpenChapters", o =>
-            //{
-            //    var (book, chapter) = ((Book book, int? chapter))o!;
-            //    CurrentChildView = new ChaptersViewModel(book, chapter);
-            //});
-            //Mediator.Instance.Register("OpenReader", o =>
-            //{
-            //    var (book, chapter, page) = ((Book, int, int))o!;
-            //    CurrentChildView = new ReaderViewModel(book, chapter, page);
-            //});
-            //Mediator.Instance.Register("OpenChapterMgr", o =>
-            //    CurrentChildView = new ChapterManagerViewModel((Book)o!));
-            //Mediator.Instance.Register("BackToCatalog", _ => CurrentChildView = new CatalogMangasViewModel());
         }
 
         private void UpdateProperties(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
