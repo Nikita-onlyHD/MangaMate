@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using MangaMate.ViewModels;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,6 +20,12 @@ namespace MangaMate
         public MainView()
         {
             InitializeComponent();
+        }
+
+        public static class MediatorCommands
+        {
+            public static ICommand OpenCatalog { get; } =
+                new Command(_ => Mediator.Instance.Notify("OpenCatalogManga"));
         }
     }
 }

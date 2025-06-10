@@ -9,6 +9,9 @@
                 <ResourceDictionary Source="/Views/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+            <local:ByteToImageConverter x:Key="ByteToImageConverter" />
+            <local:OneBasedConverter x:Key="OneBasedConverter" />
+            <local:InCollectionConverter x:Key="InCollectionConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

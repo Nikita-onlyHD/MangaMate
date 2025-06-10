@@ -4,122 +4,87 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MangaMate.Views"
+             xmlns:viewModel="clr-namespace:MangaMate.ViewModels"
+             xmlns:conv="clr-namespace:MangaMate"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <viewModel:CatalogMangasViewModel/>
+    </UserControl.DataContext>
+
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="300"/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
-        <!-- Основная область с мангой -->
-        <Grid Grid.Column="0" Margin="20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <!-- Поиск + фильтры -->
+        <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+            <TextBox Width="200" Margin="0 0 10 0" 
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <!-- Заголовок -->
-            <TextBlock Grid.Row="0" Text="Каталог манги" 
-                       FontSize="32" FontWeight="Bold" 
-                       Foreground="#A03030" 
-                       HorizontalAlignment="Left" 
-                       Margin="0,0,0,20"/>
+            <ComboBox Width="120" Margin="0 0 10 0"
+                      SelectedItem="{Binding SelectedYear}">
+                <ComboBox.ItemsSource>
+                    <!-- простые года -->
+                    <x:Array Type="{x:Type sys:Int32}" 
+                             xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                        <!-- … -->
+                    </x:Array>
+                </ComboBox.ItemsSource>
+            </ComboBox>
 
-            <!-- Поиск -->
-            <Border Grid.Row="1" 
-                    BorderBrush="#A03030" 
-                    BorderThickness="2" 
-                    CornerRadius="25" 
-                    Margin="0,0,0,20">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+            <ComboBox Width="140" Margin="0 0 10 0"
+                      ItemsSource="{Binding Source={x:Static local:LookupData.BookStates}}"
+                      SelectedItem="{Binding SelectedState}"
+                      DisplayMemberPath="Name"/>
 
-                    <TextBlock Grid.Column="0" Text="🔍" 
-                               FontSize="20" 
-                               Foreground="#A03030" 
-                               VerticalAlignment="Center" 
-                               Margin="15,0,10,0"/>
+            <!-- жанры – чек-лист -->
+            <ItemsControl ItemsSource="{Binding AllGenres}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding Name}"
+                                  IsChecked="{Binding DataContext.SelectedGenres, 
+                                        RelativeSource={RelativeSource AncestorType=UserControl},
+                                        Mode=TwoWay,
+                                        Converter={StaticResource InCollectionConverter},
+                                        ConverterParameter={Binding}}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
 
-                    <TextBox Grid.Column="1" 
-                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                             FontSize="16" 
-                             Background="Transparent" 
-                             BorderThickness="0" 
-                             Foreground="White"
-                             VerticalAlignment="Center"
-                             Margin="0,10,15,10"/>
-                </Grid>
-            </Border>
+        <!-- Список тайтлов -->
+        <ScrollViewer Grid.Row="1">
+            <ItemsControl ItemsSource="{Binding Mangas}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
 
-            <!-- Список манги -->
-            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding MangasView}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="4" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Margin="10" 
-                                    Background="#3D1010" 
-                                    CornerRadius="10" 
-                                    BorderBrush="#A03030" 
-                                    BorderThickness="1"
-                                    Cursor="Hand">
-                                <Border.InputBindings>
-                                    <MouseBinding MouseAction="LeftClick" 
-                                                  Command="{Binding DataContext.OpenMangaDetailsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                  CommandParameter="{Binding}"/>
-                                </Border.InputBindings>
-
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="200"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-
-                                    <!-- Обложка -->
-                                    <Border Grid.Row="0" 
-                                            Background="#A03030" 
-                                            CornerRadius="10,10,0,0" 
-                                            Margin="5,5,5,0">
-                                        <Image Source="{Binding Avatar}" 
-                                               Stretch="UniformToFill"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center"/>
-                                    </Border>
-
-                                    <!-- Название -->
-                                    <TextBlock Grid.Row="1" 
-                                               Text="{Binding Title}" 
-                                               FontSize="14" 
-                                               FontWeight="Bold" 
-                                               Foreground="White" 
-                                               TextAlignment="Center" 
-                                               TextWrapping="Wrap"
-                                               Margin="5,10,5,5"/>
-
-                                    <!-- Тип -->
-                                    <TextBlock Grid.Row="2" 
-                                               Text="{Binding BookType.Name}" 
-                                               FontSize="12" 
-                                               Foreground="#A03030" 
-                                               TextAlignment="Center" 
-                                               Margin="5,0,5,10"/>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-        </Grid>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type db:Book}">
+                        <Border Margin="5" Width="160" Height="280"
+                                Cursor="Hand" MouseLeftButtonUp=
+                                    "{Binding DataContext.OpenDetailCommand,
+                                      RelativeSource={RelativeSource AncestorType=UserControl},
+                                      Mode=OneWay}">
+                            <StackPanel>
+                                <Image Height="200" Source="{Binding Avatar, Converter={StaticResource ByteToImage}}"/>
+                                <TextBlock Text="{Binding Title}" TextWrapping="Wrap" 
+                                           FontWeight="SemiBold" Margin="0 5 0 0"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </UserControl>
+
