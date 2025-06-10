@@ -29,6 +29,9 @@
         <DataTemplate DataType="{x:Type viewModel:CatalogMangasViewModel}">
             <views:CatalogMangaView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:MangaDetailsViewModel}">
+            <views:MangaDetailsView/>
+        </DataTemplate>
     </Window.Resources>
 
     <Grid>
@@ -108,7 +111,7 @@
 
                 <!-- Manga Catalog Button -->
                 <Button Grid.Column="0"
-                        Command="{x:Static local:MediatorCommands.OpenCatalog}"
+                        Command="{Binding ShowCatalogMangasViewCommand}"
                         Content="Каталог Манги"
                         Style="{StaticResource MenuButtonStyle}"
                         HorizontalAlignment="Center"

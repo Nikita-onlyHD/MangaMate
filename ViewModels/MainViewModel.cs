@@ -95,6 +95,7 @@ namespace MangaMate.ViewModels
         public ICommand ShowProfileEditViewCommand { get; }
         public ICommand ShowBookEditViewCommand { get; }
         public ICommand ShowCatalogMangasViewCommand { get; }
+        public ICommand ShowMangaDetailsViewCommand { get; }
 
         #endregion
 
@@ -105,12 +106,16 @@ namespace MangaMate.ViewModels
             ShowProfileEditViewCommand = new Command(ExecuteShowProfileEditViewCommand, (_) => true);
             ShowBookEditViewCommand = new Command(ExecuteShowBookEditViewCommand, (_) => true);
             ShowCatalogMangasViewCommand = new Command(ExecuteShowCatalogMangasViewCommand, (_) => true);
+            ShowMangaDetailsViewCommand = new Command(ExecuteShowMangaDetailsViewCommand, (_) => true);
 
             //Default view
             ExecuteShowHomeViewCommand(null);
             UserContext.PropertyChanged += UpdateProperties;
 
-            Mediator.Instance.Register("OpenCatalogManga", _ => CurrentChildView = new CatalogMangasViewModel());
+            Mediator.Instance.Register(nameof(ShowCatalogMangasViewCommand), _ => ShowCatalogMangasViewCommand.Execute(null));
+            Mediator.Instance.Register("OpenMangaDetail", o => CurrentChildView = new MangaDetailsViewModel((Book)o!));
+
+            Mediator.Instance.Register("BackToCatalog", _ => CurrentChildView = new CatalogMangasViewModel());
         }
 
         private void UpdateProperties(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -149,7 +154,16 @@ namespace MangaMate.ViewModels
         private void ExecuteShowCatalogMangasViewCommand(object? obj)
         {
             CurrentChildView = new CatalogMangasViewModel();
-            Caption = "Book Edit";
+            Caption = "Catalog Mangas";
+        }
+
+        private void ExecuteShowMangaDetailsViewCommand(object? obj)
+        {
+            if (obj is Book selectedManga)
+            {
+                CurrentChildView = new MangaDetailsViewModel(selectedManga);
+                Caption = "Manga Details";
+            }
         }
     }
 }

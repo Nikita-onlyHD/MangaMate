@@ -1,6 +1,8 @@
 using MangaMate.Database.Models;
 using MangaMate.Repository;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -10,6 +12,18 @@ namespace MangaMate.ViewModels
     {
         private readonly CancellationTokenSource _cts = new();
 
+        private ICollectionView _mangasView;
+
+        public ICollectionView MangasView
+        {
+            get => _mangasView;
+            set
+            {
+                _mangasView = value;
+                OnPropertyChanged(nameof(MangasView));
+            }
+        }
+
         private ObservableCollection<Book> _mangas;
         public ObservableCollection<Book> Mangas
         {
@@ -17,7 +31,9 @@ namespace MangaMate.ViewModels
             set
             {
                 _mangas = value;
+                MangasView = CollectionViewSource.GetDefaultView(_mangas);
                 OnPropertyChanged(nameof(Mangas));
+                FilterMangas(); // Apply initial filter
             }
         }
 
@@ -126,9 +142,12 @@ namespace MangaMate.ViewModels
 
                 var mangas = books.Where(b => b.BookType.Name == "Манга").ToList();
 
-                BookStates = bookStates;
-                Genres = genres;
-                Mangas = new ObservableCollection<Book>(mangas);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    BookStates = bookStates;
+                    Genres = genres;
+                    Mangas = new ObservableCollection<Book>(mangas);
+                });
             }
             catch (OperationCanceledException)
             {
@@ -170,9 +189,16 @@ namespace MangaMate.ViewModels
                 }
 
                 // Filter by year
-                if (SelectedYear.HasValue)
+                string strYear = string.Empty;
+                if (SelectedYear != null)
                 {
-                    if (!int.TryParse(manga.Release, out var year) || year != SelectedYear.Value)
+                    strYear = SelectedYear.Value.ToString();
+                }
+                
+                if (SelectedYear.HasValue && !string.IsNullOrEmpty(strYear) &&
+                    !manga.Release.Contains(strYear, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (!int.TryParse(manga.Release, out var year) || year != SelectedYear.Value && year != null)
                     {
                         return false;
                     }
@@ -192,6 +218,8 @@ namespace MangaMate.ViewModels
 
                 return true;
             };
+
+            MangasView.Refresh();
         }
 
         private double GetMangaRating(int mangaId)
@@ -205,7 +233,7 @@ namespace MangaMate.ViewModels
         {
             if (obj is Book manga)
             {
-                Mediator.Instance.Notify("OpenMangaDetails", manga);
+                Mediator.Instance.Notify(nameof(MainViewModel.ShowMangaDetailsViewCommand), obj);
             }
         }
     }

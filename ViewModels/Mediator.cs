@@ -34,7 +34,7 @@ namespace MangaMate.ViewModels
 
             var dead = new List<WeakReference<Action<object?>>>();
 
-            foreach (var weak in list)
+            foreach (var weak in list.ToList())
             {
                 if (weak.TryGetTarget(out var action))
                     action(parameter);
