@@ -31,7 +31,8 @@
             HorizontalScrollBarVisibility="Disabled">
             <Image 
                 Source="{Binding PageImage}" 
-                Stretch="Uniform" />
+                Stretch="Uniform"
+                Width="750"/>
         </ScrollViewer>
 
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="0 10">
