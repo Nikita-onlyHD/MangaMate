@@ -1,6 +1,5 @@
-﻿using MangaMate.Database.Models;
+﻿using MangaMate.Views;
 using System.IO;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
@@ -66,6 +65,15 @@ namespace MangaMate.ViewModels
             }
         }
 
+        private HomeViewModel _homeViewModel = new();
+        private ProfileEditViewModel _profileEditViewModel = new();
+        private BookEditViewModel _bookEditViewModel = new();
+        private CatalogMangasViewModel _catalogMangasViewModel = new();
+        private MangaDetailsViewModel _mangaDetailsViewModel = new();
+        private MangaChaptersViewModel _mangaChaptersViewModel = new();
+        private MangaChapterManagerViewModel _mangaChapterManagerViewModel = new();
+        private MangaReaderViewModel _mangaReaderViewModel = new();
+
         public BitmapImage AvatarImage
         {
             get
@@ -96,6 +104,9 @@ namespace MangaMate.ViewModels
         public ICommand ShowBookEditViewCommand { get; }
         public ICommand ShowCatalogMangasViewCommand { get; }
         public ICommand ShowMangaDetailsViewCommand { get; }
+        public ICommand ShowMangaChaptersViewCommand { get; }
+        public ICommand ShowMangaChapterManagerViewCommand { get; }
+        public ICommand ShowMangaReaderViewCommand { get; }
 
         #endregion
 
@@ -107,15 +118,19 @@ namespace MangaMate.ViewModels
             ShowBookEditViewCommand = new Command(ExecuteShowBookEditViewCommand, (_) => true);
             ShowCatalogMangasViewCommand = new Command(ExecuteShowCatalogMangasViewCommand, (_) => true);
             ShowMangaDetailsViewCommand = new Command(ExecuteShowMangaDetailsViewCommand, (_) => true);
+            ShowMangaChaptersViewCommand = new Command(ExecuteShowMangaChaptersViewCommand, (_) => true);
+            ShowMangaChapterManagerViewCommand = new Command(ExecuteShowMangaChapterManagerViewCommand, (_) => true);
+            ShowMangaReaderViewCommand = new Command(ExecuteShowMangaReaderViewCommand, (_) => true);
 
             //Default view
             ExecuteShowHomeViewCommand(null);
             UserContext.PropertyChanged += UpdateProperties;
 
-            Mediator.Instance.Register(nameof(ShowCatalogMangasViewCommand), _ => ShowCatalogMangasViewCommand.Execute(null));
-            Mediator.Instance.Register("OpenMangaDetail", o => CurrentChildView = new MangaDetailsViewModel((Book)o!));
-
-            Mediator.Instance.Register("BackToCatalog", _ => CurrentChildView = new CatalogMangasViewModel());
+            Mediator.Instance.Register("ShowManga", ExecuteShowMangaDetailsViewCommand);
+            Mediator.Instance.Register("ShowMangaChapters", ExecuteShowMangaChaptersViewCommand);
+            Mediator.Instance.Register("ShowMangaChapterManager", ExecuteShowMangaChapterManagerViewCommand);
+            Mediator.Instance.Register("ShowMangaReader", ExecuteShowMangaReaderViewCommand);
+            Mediator.Instance.Register("BackToCatalog", ExecuteShowCatalogMangasViewCommand);
         }
 
         private void UpdateProperties(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -135,35 +150,50 @@ namespace MangaMate.ViewModels
 
         private void ExecuteShowHomeViewCommand(object? obj)
         {
-            CurrentChildView = new HomeViewModel();
+            CurrentChildView = _homeViewModel;
             Caption = "Home";
         }
 
         private void ExecuteShowProfileEditViewCommand(object? obj)
         {
-            CurrentChildView = new ProfileEditViewModel();
+            CurrentChildView = _profileEditViewModel;
             Caption = "Profile Edit";
         }
 
         private void ExecuteShowBookEditViewCommand(object? obj)
         {
-            CurrentChildView = new BookEditViewModel();
+            CurrentChildView = _bookEditViewModel;
             Caption = "Book Edit";
         }
 
         private void ExecuteShowCatalogMangasViewCommand(object? obj)
         {
-            CurrentChildView = new CatalogMangasViewModel();
+            CurrentChildView = _catalogMangasViewModel;
             Caption = "Catalog Mangas";
         }
 
         private void ExecuteShowMangaDetailsViewCommand(object? obj)
         {
-            if (obj is Book selectedManga)
-            {
-                CurrentChildView = new MangaDetailsViewModel(selectedManga);
-                Caption = "Manga Details";
-            }
+            CurrentChildView = _mangaDetailsViewModel;
+            Caption = "Manga Details";
+        }
+
+        private void ExecuteShowMangaChaptersViewCommand(object? obj)
+        {
+            CurrentChildView = _mangaChaptersViewModel;
+            Caption = "Manga Chapters";
+        }
+
+        private void ExecuteShowMangaChapterManagerViewCommand(object? obj)
+        {
+            CurrentChildView = _mangaChapterManagerViewModel;
+            Caption = "Manga Chapter Manger";
+        }
+
+        private void ExecuteShowMangaReaderViewCommand(object? obj)
+        {
+            CurrentChildView = _mangaReaderViewModel;
+            Caption = "Manga Reader";
         }
     }
 }

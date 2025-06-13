@@ -139,10 +139,12 @@ internal class AuthenticationViewModel : ViewModelBase
         {
             LoginMode = Visibility.Hidden;
             RegisterMode = Visibility.Visible;
+            ClearInputs();
         } else
         {
             LoginMode = Visibility.Visible;
             RegisterMode = Visibility.Hidden;
+            ClearInputs();
         }
     }
 

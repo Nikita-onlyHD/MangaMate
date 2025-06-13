@@ -10,20 +10,20 @@ namespace MangaMate.ViewModels
         public static Mediator Instance => _instance.Value;
 
         private readonly ConcurrentDictionary<string,
-            List<WeakReference<Action<object?>>>> _routes = new();
+            List<Action<object?>>> _routes = new();
 
         private Mediator() { }
 
         public void Register(string key, Action<object?> action)
         {
-            var weak = new WeakReference<Action<object?>>(action);
+            var a = new Action<object?>(action);
 
             _routes.AddOrUpdate(
                 key,
-                _ => new List<WeakReference<Action<object?>>> { weak },
+                _ => new List<Action<object?>> { a },
                 (_, list) =>
                 {
-                    list.Add(weak);
+                    list.Add(a);
                     return list;
                 });
         }
@@ -32,18 +32,10 @@ namespace MangaMate.ViewModels
         {
             if (!_routes.TryGetValue(key, out var list)) return;
 
-            var dead = new List<WeakReference<Action<object?>>>();
-
-            foreach (var weak in list.ToList())
+            foreach (var action in list.ToList())
             {
-                if (weak.TryGetTarget(out var action))
-                    action(parameter);
-                else
-                    dead.Add(weak);
+                action(parameter);
             }
-
-            if (dead.Count > 0)
-                list.RemoveAll(dead.Contains);
         }
     }
 }

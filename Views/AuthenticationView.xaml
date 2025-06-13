@@ -9,8 +9,10 @@
     mc:Ignorable="d"
     Title="AuthenticationView"
     Height="600"
-    Width="800"
+    Width="900"
+    WindowStyle="None"
     WindowStartupLocation="CenterScreen"
+    Background="Transparent"
     ResizeMode="NoResize">
     <Window.DataContext>
         <viewModel:AuthenticationViewModel/>
@@ -24,8 +26,112 @@
         <Binding Path="IsViewVisible" Mode="TwoWay" Converter="{StaticResource BooleanToVisibility}"/>
     </Window.Visibility>
 
-    <Grid>
-        <local:LoginView Visibility="{Binding LoginMode}"/>
-        <local:RegisterView Visibility="{Binding RegisterMode}"/>
-    </Grid>
+    <Border CornerRadius="20">
+        <Border.Background>
+            <ImageBrush ImageSource="./Images/bg.jpg"/>
+        </Border.Background>
+
+        <Border CornerRadius="12"
+            BorderThickness="3">
+            <Border.BorderBrush>
+                <LinearGradientBrush StartPoint="0, 0" EndPoint="1, 1">
+                    <GradientStop Color="#492527" Offset="0"/>
+                    <GradientStop Color="#000000" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="5"/>
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="btnMinimize"
+                    Content="-"
+                    Foreground="#000000"
+                    FontSize="16"
+                    FontFamily="Montserrat"
+                    Cursor="Hand"
+                    Grid.Column="1"
+                    Click="btnMinimize_Click">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#8C2527"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#A62527"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="18" Height="18"
+                            CornerRadius="9"
+                            Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+
+
+                <Button x:Name="btnClose"
+                    Content="X"
+                    Foreground="#000000"
+                    FontSize="12"
+                    FontFamily="Montserrat"
+                    Cursor="Hand"
+                    Grid.Column="2"
+                    Click="btnCloseClick">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#8C2527"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#A62527"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="18" Height="18"
+                            CornerRadius="9"
+                            Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Border Grid.Row="1"
+                     Grid.Column="0"
+                     Margin="272,148,216,46"
+                     Width="251"
+                     BorderBrush="#8C2527"
+                     BorderThickness="4"
+                     CornerRadius="5">
+                    <Grid>
+                        <local:LoginView Visibility="{Binding LoginMode}"/>
+                        <local:RegisterView Visibility="{Binding RegisterMode}"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Border>
+
+
 </Window>

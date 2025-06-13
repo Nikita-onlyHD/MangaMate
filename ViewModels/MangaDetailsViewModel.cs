@@ -1,17 +1,12 @@
 ﻿using MangaMate.Database.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MangaMate.ViewModels
 {
     public class MangaDetailsViewModel : ViewModelBase
     {
-        private Book _manga;
-        public Book Manga
+        private Book? _manga;
+        public Book? Manga
         {
             get => _manga;
             set
@@ -22,19 +17,26 @@ namespace MangaMate.ViewModels
         }
 
         public ICommand BackCommand { get; }
+        public ICommand ChaptersCommand { get; }
 
-        public MangaDetailsViewModel(Book manga)
+        public MangaDetailsViewModel()
         {
-            _manga = manga;
+            BackCommand =  new Command(_ => Mediator.Instance.Notify("BackToCatalog"));
+            ChaptersCommand =  new Command(ExecuteOpenMangaChaptersCommand);
 
-            BackCommand = new Command(ExecuteBackCommand);
-
-            BackCommand = new Command(_ => Mediator.Instance.Notify("BackToCatalog"));
+            Mediator.Instance.Register("ShowManga", p => SetManga((p as Book)!));
         }
 
-        private void ExecuteBackCommand(object? obj)
+        private void ExecuteOpenMangaChaptersCommand(object? obj)
         {
-            Mediator.Instance.Notify(nameof(MainViewModel.ShowCatalogMangasViewCommand));
+            var manga = Manga;
+
+            Mediator.Instance.Notify("ShowMangaChapters", manga);
+        }
+
+        private void SetManga(Book manga)
+        {
+            Manga = manga;
         }
     }
 }

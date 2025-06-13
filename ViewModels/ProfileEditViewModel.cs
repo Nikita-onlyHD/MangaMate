@@ -1,12 +1,9 @@
-﻿using System.ComponentModel;
+﻿using MangaMate.Database.Repositories;
+using Microsoft.Win32;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using MangaMate.Database.Models;
-using MangaMate.Database.Repositories;
-using Microsoft.Win32;
 
 namespace MangaMate.ViewModels
 {

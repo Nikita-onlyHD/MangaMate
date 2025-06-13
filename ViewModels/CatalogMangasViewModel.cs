@@ -71,8 +71,8 @@ namespace MangaMate.ViewModels
             }
         }
 
-        private BookState _selectedBookState;
-        public BookState SelectedBookState
+        private BookState? _selectedBookState;
+        public BookState? SelectedBookState
         {
             get => _selectedBookState;
             set
@@ -83,8 +83,8 @@ namespace MangaMate.ViewModels
             }
         }
 
-        private Genre _selectedGenre;
-        public Genre SelectedGenre
+        private Genre? _selectedGenre;
+        public Genre? SelectedGenre
         {
             get => _selectedGenre;
             set
@@ -120,6 +120,7 @@ namespace MangaMate.ViewModels
         }
 
         public ICommand OpenMangaCommand { get; }
+        public ICommand ResetFilters { get; }
 
         public CatalogMangasViewModel()
         {
@@ -127,7 +128,8 @@ namespace MangaMate.ViewModels
             BookStates = new List<BookState>();
             Genres = new List<Genre>();
 
-            OpenMangaCommand = new Command(ExecuteOpenMangaCommand);
+            OpenMangaCommand = new Command(p => ExecuteOpenMangaCommand(p));
+            ResetFilters = new Command(ExcecuteResetFiltersCommand);
 
             LoadDataAsync();
         }
@@ -204,11 +206,8 @@ namespace MangaMate.ViewModels
                     }
                 }
 
-                // Filter by rating (assuming average rating is stored somewhere)
-                // You'll need to implement this based on your actual data model
                 if (MinRating.HasValue)
                 {
-                    // Placeholder - implement actual rating logic
                     var mangaRating = GetMangaRating(manga.Id);
                     if (mangaRating < MinRating.Value)
                     {
@@ -224,17 +223,27 @@ namespace MangaMate.ViewModels
 
         private double GetMangaRating(int mangaId)
         {
-            // Implement actual rating calculation based on your data model
-            // This is just a placeholder
-            return 4.5; // Example rating
+            return 4.5;
+        }
+
+        private void ExcecuteResetFiltersCommand(object? obj)
+        {
+            SearchText = string.Empty;
+            SelectedBookState = null;
+            SelectedGenre = null;
+            SelectedYear = null;
+            //MinRating = null;
         }
 
         private void ExecuteOpenMangaCommand(object? obj)
         {
-            if (obj is Book manga)
+            if (obj is not Book manga)
             {
-                Mediator.Instance.Notify(nameof(MainViewModel.ShowMangaDetailsViewCommand), obj);
+                MessageBox.Show("Не удалось открыть мангу. Пожалуйста, попробуйте еще раз.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
+
+            Mediator.Instance.Notify("ShowManga", manga);
         }
     }
 }

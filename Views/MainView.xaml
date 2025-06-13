@@ -32,6 +32,15 @@
         <DataTemplate DataType="{x:Type viewModel:MangaDetailsViewModel}">
             <views:MangaDetailsView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:MangaChaptersViewModel}">
+            <views:MangaChaptersView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:MangaChapterManagerViewModel}">
+            <views:MangaChapterManagerView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:MangaReaderViewModel}">
+            <views:MangaReaderView/>
+        </DataTemplate>
     </Window.Resources>
 
     <Grid>

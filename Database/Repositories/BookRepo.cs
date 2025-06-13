@@ -1,7 +1,11 @@
 ﻿using MangaMate.Database;
 using MangaMate.Database.Models;
 using Microsoft.EntityFrameworkCore;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 
 namespace MangaMate.Repository
 {
@@ -159,5 +163,95 @@ namespace MangaMate.Repository
             return result.OrderBy(y => y).ToList();
         }
 
+        public static async Task<List<int>> GetChaptersAsync(int bookId, CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+            await using var ctx = new ContextFactory().CreateDbContext([]);
+
+            return await ctx.Set<BookPage>()
+                .Where(p => p.BookId == bookId)
+                .Select(p => p.Chapter)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToListAsync(token);
+        }
+
+        public static async Task DeleteChapterAsync(
+            int bookId, int chapter, CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+            await using var ctx = new ContextFactory().CreateDbContext([]);
+
+            var pages = ctx.Set<BookPage>()
+                .Where(p => p.BookId == bookId && p.Chapter == chapter);
+            ctx.RemoveRange(pages);
+            await ctx.SaveChangesAsync(token);
+        }
+
+        public static async Task AddChapterFromCbrAsync(
+            int bookId, int chapter, string filePath, CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+            await using var ctx = new ContextFactory().CreateDbContext([]);
+
+            IArchive archive;
+            try
+            {
+                archive = SharpCompress.Archives.ArchiveFactory.Open(filePath);
+            }
+            catch (InvalidFormatException ex)
+            {
+                throw new InvalidOperationException("Файл не является корректным RAR-архивом", ex);
+            }
+
+            var pages = new List<BookPage>();
+
+            foreach (var entry in archive.Entries.Where(e => !e.IsDirectory))
+            {
+                try
+                {
+                    var name = Path.GetFileNameWithoutExtension(entry.Key);
+                    if (!int.TryParse(name, out var pageNumber))
+                        continue;
+
+                    await using var ms = new MemoryStream();
+                    await entry.OpenEntryStream().CopyToAsync(ms);
+                    pages.Add(new BookPage
+                    {
+                        BookId = bookId,
+                        Chapter = chapter,
+                        Page = pageNumber,
+                        Data = ms.ToArray()
+                    });
+                }
+                catch (Exception ex)
+                {
+                    // Логируем ошибку для проблемной записи, но продолжаем обработку
+                    Debug.WriteLine($"Ошибка обработки записи {entry.Key}: {ex.Message}");
+                }
+            }
+
+            if (pages.Count == 0)
+                throw new InvalidOperationException("В архиве не найдено изображений страниц.");
+
+            var existing = ctx.Set<BookPage>()
+                .Where(p => p.BookId == bookId && p.Chapter == chapter);
+            ctx.RemoveRange(existing);
+
+            await ctx.Set<BookPage>().AddRangeAsync(pages, token);
+            await ctx.SaveChangesAsync(token);
+        }
+
+        public static async Task<List<BookPage>> GetPagesAsync(
+            int bookId, int chapter, CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+            await using var ctx = new ContextFactory().CreateDbContext([]);
+
+            return await ctx.Set<BookPage>()
+                .Where(p => p.BookId == bookId && p.Chapter == chapter)
+                .OrderBy(p => p.Page)
+                .ToListAsync(token);
+        }
     }
 }

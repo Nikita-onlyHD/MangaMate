@@ -78,18 +78,18 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Width="150" Height="220" Margin="10" 
-                    BorderBrush="#A03030" BorderThickness="1"
-                    CornerRadius="5">
+                                    BorderBrush="#A03030" BorderThickness="1"
+                                    CornerRadius="5">
                                 <Button Command="{Binding DataContext.OpenMangaCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                        CommandParameter="{Binding}"
-                        Style="{StaticResource ImageButtonStyle}">
+                                        CommandParameter="{Binding}"
+                                        Style="{StaticResource ImageButtonStyle}">
                                     <StackPanel>
                                         <Image Source="{Binding Avatar, Converter={StaticResource ByteArrayToImageConverter}}"
-                               Width="130" Height="150" Margin="5"
-                               Stretch="UniformToFill"/>
+                                               Width="130" Height="150" Margin="5"
+                                               Stretch="UniformToFill"/>
                                         <TextBlock Text="{Binding Title}" Margin="5" 
-                                   TextWrapping="Wrap" MaxWidth="130"
-                                   TextAlignment="Center"/>
+                                               TextWrapping="Wrap" MaxWidth="130"
+                                               TextAlignment="Center"/>
                                     </StackPanel>
                                 </Button>
                             </Border>
@@ -101,53 +101,54 @@
 
         <!-- Панель фильтров -->
         <Border Grid.Column="1" 
-    Background="#3D1010" 
-    BorderBrush="#A03030" 
-    BorderThickness="2,0,0,0" 
-    Margin="0,20,20,20">
+            Background="#3D1010" 
+            BorderBrush="#A03030" 
+            BorderThickness="2,0,0,0" 
+            Margin="0,20,20,20">
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="20">
                 <StackPanel>
                     <TextBlock 
-                Text="Жанр" 
-                FontSize="18" 
-                FontWeight="Bold" 
-                Foreground="#A03030" 
-                Margin="0,0,0,10"/>
+                        Text="Жанр" 
+                        FontSize="18" 
+                        FontWeight="Bold" 
+                        Foreground="#A03030" 
+                        Margin="0,0,0,10"/>
                     <ComboBox 
-                ItemsSource="{Binding Genres}" 
-                DisplayMemberPath="Name"
-                SelectedItem="{Binding SelectedGenre}"
-                Width="150" Margin="5" Padding="5"/>
+                        ItemsSource="{Binding Genres}" 
+                        DisplayMemberPath="Name"
+                        SelectedItem="{Binding SelectedGenre}"
+                        Width="150" Margin="5" Padding="5"/>
 
                     <TextBlock Text="Статус" 
-                   FontSize="18" 
-                   FontWeight="Bold" 
-                   Foreground="#A03030" 
-                   Margin="0,0,0,10"/>
+                       FontSize="18" 
+                       FontWeight="Bold" 
+                       Foreground="#A03030" 
+                       Margin="0,0,0,10"/>
                     <ComboBox 
-                ItemsSource="{Binding BookStates}" 
-                DisplayMemberPath="Name"
-                SelectedItem="{Binding SelectedBookState}"
-                Width="150" Margin="5" Padding="5"/>
+                        ItemsSource="{Binding BookStates}" 
+                        DisplayMemberPath="Name"
+                        SelectedItem="{Binding SelectedBookState}"
+                        Width="150" Margin="5" Padding="5"/>
 
                     <TextBlock Text="Год релиза" 
-                   FontSize="18" 
-                   FontWeight="Bold" 
-                   Foreground="#A03030" 
-                   Margin="0,0,0,10"/>
+                       FontSize="18" 
+                       FontWeight="Bold" 
+                       Foreground="#A03030" 
+                       Margin="0,0,0,10"/>
                     <TextBox 
-                Text="{Binding SelectedYear, UpdateSourceTrigger=PropertyChanged}"
-                Width="100" Margin="5" Padding="5"/>
+                        Text="{Binding SelectedYear, UpdateSourceTrigger=PropertyChanged}"
+                        Width="100" Margin="5" Padding="5"/>
 
                     <TextBlock Text="Оценка" 
-                   FontSize="18" 
-                   FontWeight="Bold" 
-                   Foreground="#A03030" 
-                   Margin="0,0,0,10"/>
+                       FontSize="18" 
+                       FontWeight="Bold" 
+                       Foreground="#A03030" 
+                       Margin="0,0,0,10"/>
                     <TextBox 
-                Text="{Binding MinRating, UpdateSourceTrigger=PropertyChanged}"
-                Width="100" Margin="5" Padding="5"/>
+                        Text="{Binding MinRating, UpdateSourceTrigger=PropertyChanged}"
+                        Width="100" Margin="5" Padding="5"/>
+                    <Button Content="Сбросить фильтры" Command="{Binding ResetFilters}"/>
                 </StackPanel>
             </ScrollViewer>
         </Border>
